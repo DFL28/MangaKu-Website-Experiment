@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1f3a;
+            color: #e8eaf6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #result {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .manga-card {
+            background: #252b4a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .manga-card img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+        .loading {
+            color: #2196F3;
+            font-style: italic;
+        }
+        .error {
+            color: #f44336;
+        }
+        .success {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API MangaKu</h1>
+
+    <div>
+        <button onclick="testHealth()">Test Health</button>
+        <button onclick="testMangaList()">Test Manga List</button>
+        <button onclick="testSearch()">Test Search</button>
+        <button onclick="clearResult()">Clear</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        const resultDiv = document.getElementById('result');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            resultDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        }
+
+        function clearResult() {
+            resultDiv.innerHTML = '';
+        }
+
+        async function testHealth() {
+            log('Testing /api/health...', 'info');
+            try {
+                const response = await fetch(`${API_BASE}/api/health`);
+                const data = await response.json();
+                log('✅ Health check: ' + JSON.stringify(data, null, 2), 'success');
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testMangaList() {
+            log('Testing /api/manga...', 'info');
+            log('Fetching manga from MangaDex...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/manga?source=mangadex&limit=5`);
+                log(`Response status: ${response.status}`);
+
+                const data = await response.json();
+
+                if (data.success) {
+                    log(`✅ Loaded ${data.data.length} manga`, 'success');
+
+                    data.data.forEach(manga => {
+                        resultDiv.innerHTML += `
+                            <div class="manga-card">
+                                <img src="${manga.cover}" alt="${manga.title}">
+                                <h3>${manga.title}</h3>
+                                <p>Rating: ${manga.rating} ⭐</p>
+                                <p>Status: ${manga.status}</p>
+                                <p>Source: ${manga.source}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    log('❌ API returned error', 'error');
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+                console.error('Full error:', error);
+            }
+        }
+
+        async function testSearch() {
+            log('Testing /api/search...', 'info');
+            const query = 'naruto';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search?q=${query}&source=mangadex`);
+                const data = await response.json();
+
+                if (data.success) {
+                    log(`✅ Found ${data.data.length} results for "${query}"`, 'success');
+
+                    data.data.forEach(manga => {
+                        log(`  - ${manga.title}`);
+                    });
+                } else {
+                    log('❌ Search failed', 'error');
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        // Auto test on load
+        window.addEventListener('load', () => {
+            log('🚀 Test page loaded', 'success');
+            log('Server: ' + API_BASE);
+            log('Click buttons above to test API endpoints');
+        });
+    </script>
+</body>
+</html>

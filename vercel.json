@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "name": "mangaku",
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/manga",
+      "destination": "/api/manga.js"
+    },
+    {
+      "source": "/api/manga/:id/detail",
+      "destination": "/api/detail.js?id=:id"
+    },
+    {
+      "source": "/api/manga/:id/chapters",
+      "destination": "/api/chapters.js?id=:id"
+    },
+    {
+      "source": "/api/chapter/:id/pages",
+      "destination": "/api/pages.js?id=:id"
+    },
+    {
+      "source": "/api/search",
+      "destination": "/api/search.js"
+    }
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=300, stale-while-revalidate=600"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(js|css))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

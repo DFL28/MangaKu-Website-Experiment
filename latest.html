@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komik Terbaru - MangaKu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1><a href="index.html">MangaKu</a></h1>
+                </div>
+
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari manga..." onkeyup="handleSearch(event)">
+                    <button class="search-btn" onclick="performSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <!-- Hamburger Menu Toggle -->
+                <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div class="search-results" id="searchResults" style="display: none;">
+            <div class="container">
+                <div class="search-results-content" id="searchResultsContent">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Menu (Slide from Right) -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="index.html">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="index.html#genres">
+                <i class="fas fa-th"></i> Genre
+            </a>
+            <a href="popular.html">
+                <i class="fas fa-fire"></i> Populer
+            </a>
+            <a href="latest.html" class="active">
+                <i class="fas fa-clock"></i> Terbaru
+            </a>
+            <a href="bookmark.html">
+                <i class="fas fa-bookmark"></i> Bookmark & History
+            </a>
+            <!-- Login/Logout will be inserted here by JavaScript -->
+            <div id="auth-menu-item"></div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-clock"></i> Komik Terbaru</h1>
+                <p>Update manga, manhwa, dan manhua terbaru</p>
+            </div>
+
+            <!-- Comics Grid -->
+            <div class="manga-grid" id="latestGrid">
+                <div class="updates-loading" style="grid-column: 1/-1;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Memuat komik terbaru...</span>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="page-btn" id="prevBtn" onclick="prevPage()">
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button class="page-btn" id="nextBtn" onclick="nextPage()">
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MangaKu. Semua manga diambil dari sumber publik untuk tujuan edukasi.</p>
+            <p>Disclaimer: Website ini hanya mirror dari berbagai sumber manga.</p>
+        </div>
+    </footer>
+
+    <script src="cache-manager.js"></script>
+    <script src="script.js?v=20251102-cache"></script>
+    <script src="latest.js"></script>
+    <script>
+        // Add authentication functionality to the side menu
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthMenuItem();
+        });
+
+        function updateAuthMenuItem() {
+            const authMenuItem = document.getElementById('auth-menu-item');
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                authMenuItem.innerHTML = `
+                    <a href="#" onclick="logout(); toggleSideMenu();">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                `;
+            } else {
+                authMenuItem.innerHTML = `
+                    <a href="login.html" onclick="toggleSideMenu();">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            updateAuthMenuItem();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

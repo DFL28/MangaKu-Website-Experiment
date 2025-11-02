@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaKu - Baca Manga Subtitle Indonesia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1><a href="index.html">MangaKu</a></h1>
+                </div>
+                <div class="search-box-center">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Cari manga...">
+                </div>
+                <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div class="search-results" id="searchResults" hidden>
+            <div class="container">
+                <div class="search-results-content" id="searchResultsContent">
+                    <p class="search-empty">Mulai ketik untuk mencari manga.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="index.html" class="active">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="genre.html">
+                <i class="fas fa-th"></i> Genre
+            </a>
+            <a href="popular.html">
+                <i class="fas fa-fire"></i> Populer
+            </a>
+            <a href="latest.html">
+                <i class="fas fa-clock"></i> Terbaru
+            </a>
+            <a href="bookmark.html">
+                <i class="fas fa-bookmark"></i> Bookmark & History
+            </a>
+            <div id="auth-menu-item"></div>
+        </nav>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Selamat Datang di MangaKu</h2>
+            <p>Baca manga, manhwa, dan manhua subtitle Indonesia terbaru tanpa ribet.</p>
+        </div>
+    </section>
+
+    <section class="home-toolbar">
+        <div class="container">
+            <div class="home-tabs">
+                <div class="type-tab-bar" id="typeTabBar">
+                    <button type="button" class="type-tab active" data-type="manga">Manga</button>
+                    <button type="button" class="type-tab" data-type="manhwa">Manhwa</button>
+                    <button type="button" class="type-tab" data-type="manhua">Manhua</button>
+                    <button type="button" class="type-tab" data-type="all">Semua</button>
+                    <span class="type-tab-indicator" id="typeTabIndicator"></span>
+                </div>
+                <div class="home-tab-actions">
+                    <button type="button" class="filter-toggle" id="filterToggle">
+                        <i class="fas fa-sliders-h"></i>
+                        Filter
+                    </button>
+                    <button type="button" class="home-refresh" id="refreshUpdatesBtn" aria-label="Muat ulang pembaruan">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="updates-section" id="updatesSection">
+                <div class="updates-header">
+                    <div>
+                        <h2>Update Komik Terbaru</h2>
+                        <p class="updates-subtitle">Fokus pada judul populer dari sumber tepercaya</p>
+                    </div>
+                    <button class="updates-view-all" type="button" onclick="showLatest()">
+                        Lihat Semua
+                    </button>
+                </div>
+                <div class="updates-carousel" id="updatesCarousel">
+                    <div class="updates-empty">Memuat pembaruan...</div>
+                </div>
+            </section>
+
+            <!-- Other Comics Section (Grid Layout) -->
+            <section class="updates-section" id="otherComicsSection" style="margin-top: 3rem;">
+                <div class="updates-header">
+                    <div>
+                        <h2>Update Komik Lainnya</h2>
+                        <p class="updates-subtitle">Koleksi manga, manhwa, dan manhua pilihan</p>
+                    </div>
+                    <a href="latest.html" class="updates-view-all">
+                        Lihat Semua
+                    </a>
+                </div>
+                <div class="manga-grid" id="otherComicsGrid">
+                    <div class="updates-loading" style="grid-column: 1/-1;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Memuat komik...</span>
+                    </div>
+                </div>
+
+                <!-- Pagination for Other Comics -->
+                <div class="pagination" id="otherComicsPagination" style="display: none; margin-top: 2rem;">
+                    <button class="page-btn" id="otherComicsPrevBtn" onclick="previousOtherComicsPage()">
+                        <i class="fas fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <div class="page-numbers" id="otherComicsPageNumbers"></div>
+                    <button class="page-btn" id="otherComicsNextBtn" onclick="nextOtherComicsPage()">
+                        Selanjutnya <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MangaKu. Semua manga diambil dari sumber publik untuk tujuan edukasi.</p>
+            <p>Disclaimer: Website ini hanya mirror dari berbagai sumber manga.</p>
+        </div>
+    </footer>
+
+    <script src="cache-manager.js"></script>
+    <script src="script.js?v=20251102-cache"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof updateAuthMenuItem === 'function') {
+                updateAuthMenuItem();
+            }
+        });
+    </script>
+</body>
+</html>

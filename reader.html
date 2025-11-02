@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader - MangaKu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="reader-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Reader Header -->
+    <header class="reader-header">
+        <div class="container">
+            <div class="reader-nav">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </button>
+
+                <div class="reader-title">
+                    <h1 id="mangaTitle">Loading...</h1>
+                    <p id="chapterTitle">Chapter 1</p>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="settings-btn" onclick="toggleSettings()">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Menu (Slide from Right) -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="index.html">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="genre.html">
+                <i class="fas fa-th"></i> Genre
+            </a>
+            <a href="#" onclick="showPopular(); toggleSideMenu();">
+                <i class="fas fa-fire"></i> Populer
+            </a>
+            <a href="#" onclick="showLatest(); toggleSideMenu();">
+                <i class="fas fa-clock"></i> Terbaru
+            </a>
+            <a href="bookmark.html">
+                <i class="fas fa-bookmark"></i> Bookmark & History
+            </a>
+        </nav>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-content">
+            <h3><i class="fas fa-cog"></i> Pengaturan Reader</h3>
+
+            <div class="setting-group">
+                <label>Mode Baca:</label>
+                <div class="setting-options">
+                    <button class="setting-btn active" data-mode="vertical" onclick="changeReadMode('vertical')">
+                        <i class="fas fa-arrows-alt-v"></i> Vertical
+                    </button>
+                    <button class="setting-btn" data-mode="horizontal" onclick="changeReadMode('horizontal')">
+                        <i class="fas fa-arrows-alt-h"></i> Horizontal
+                    </button>
+                    <button class="setting-btn" data-mode="single" onclick="changeReadMode('single')">
+                        <i class="fas fa-file"></i> Single Page
+                    </button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Lebar Gambar:</label>
+                <div class="slider-container">
+                    <input type="range" id="imageWidth" min="60" max="100" value="80"
+                           oninput="changeImageWidth(this.value)">
+                    <span id="widthValue">80%</span>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Kualitas Gambar:</label>
+                <div class="setting-options">
+                    <button class="setting-btn" data-quality="low" onclick="changeQuality('low')">
+                        <i class="fas fa-image"></i> Rendah
+                    </button>
+                    <button class="setting-btn active" data-quality="medium" onclick="changeQuality('medium')">
+                        <i class="fas fa-images"></i> Sedang
+                    </button>
+                    <button class="setting-btn" data-quality="high" onclick="changeQuality('high')">
+                        <i class="fas fa-file-image"></i> Tinggi
+                    </button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Auto Scroll:</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="autoScroll" onchange="toggleAutoScroll()">
+                    <label for="autoScroll"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reader Content -->
+    <main class="reader-content" id="readerContent">
+        <div class="chapter-navigation top">
+            <button class="nav-btn" onclick="previousChapter()">
+                <i class="fas fa-chevron-left"></i> Chapter Sebelumnya
+            </button>
+            <div class="chapter-selector">
+                <select id="chapterSelect" onchange="changeChapter(this.value)">
+                    <!-- Chapters will be loaded here -->
+                </select>
+            </div>
+            <button class="nav-btn" onclick="nextChapter()">
+                Chapter Selanjutnya <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Image Container -->
+        <div class="image-container" id="imageContainer">
+            <!-- Manga images will be loaded here -->
+            <div class="loading active">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Memuat halaman...</p>
+            </div>
+        </div>
+
+        <div class="chapter-navigation bottom">
+            <button class="nav-btn" onclick="previousChapter()">
+                <i class="fas fa-chevron-left"></i> Chapter Sebelumnya
+            </button>
+            <div class="page-info">
+                <span id="currentPage">1</span> / <span id="totalPages">0</span>
+            </div>
+            <button class="nav-btn" onclick="nextChapter()">
+                Chapter Selanjutnya <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h3><i class="fas fa-comments"></i> Komentar</h3>
+            <div class="comment-form">
+                <textarea id="commentText" placeholder="Tulis komentar..."></textarea>
+                <button class="btn-primary" onclick="submitComment()">
+                    <i class="fas fa-paper-plane"></i> Kirim
+                </button>
+            </div>
+            <div class="comments-list" id="commentsList">
+                <!-- Comments will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-comment-slash"></i>
+                    <p>Belum ada komentar. Jadilah yang pertama!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="auto-advance-toast" id="autoAdvanceToast">
+        <i class="fas fa-forward"></i>
+        <span>Memuat chapter berikutnya...</span>
+    </div>
+
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+        <button class="float-btn" onclick="scrollToTop()">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="float-btn" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MangaKu. Semua manga diambil dari sumber publik untuk tujuan edukasi.</p>
+        </div>
+    </footer>
+
+    <script src="script.js?v=20251101-opt"></script>
+    <script src="reader-script.js?v=20251101-opt"></script>
+</body>
+</html>

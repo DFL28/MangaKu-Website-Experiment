@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Manga - MangaKu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="detail-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1><a href="index.html">MangaKu</a></h1>
+                </div>
+                <div class="search-box-center">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Cari manga...">
+                </div>
+                <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Menu (Slide from Right) -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="index.html">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="genre.html">
+                <i class="fas fa-th"></i> Genre
+            </a>
+            <a href="#" onclick="showPopular(); toggleSideMenu();">
+                <i class="fas fa-fire"></i> Populer
+            </a>
+            <a href="#" onclick="showLatest(); toggleSideMenu();">
+                <i class="fas fa-clock"></i> Terbaru
+            </a>
+            <a href="bookmark.html">
+                <i class="fas fa-bookmark"></i> Bookmark & History
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="detail-content">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <span>/</span>
+                <span id="breadcrumbTitle">Loading...</span>
+            </div>
+
+            <!-- Manga Detail -->
+            <div class="manga-detail" id="mangaDetail">
+                <div class="detail-header">
+                    <div class="detail-cover">
+                        <img id="mangaCover" src="" alt="Manga Cover">
+                        <div class="cover-overlay">
+                            <div class="rating-large" id="mangaRating">
+                                <i class="fas fa-star"></i>
+                                <span>0.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-info">
+                        <h1 class="manga-title-large" id="mangaTitle">Loading...</h1>
+                        <div class="manga-alt-title" id="mangaAltTitle"></div>
+
+                        <div class="manga-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-book"></i>
+                                <span id="mangaStatus">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-user"></i>
+                                <span id="mangaAuthor">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span id="mangaViews">-</span>
+                            </div>
+                        </div>
+
+                        <div class="manga-genres-large" id="mangaGenres">
+                            <!-- Genres will be loaded here -->
+                        </div>
+
+                        <div class="manga-description" id="mangaDescription">
+                            <p>Loading description...</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-primary" onclick="readFirstChapter()">
+                                <i class="fas fa-play"></i> Baca Sekarang
+                            </button>
+                            <button class="btn-secondary" onclick="toggleBookmark()">
+                                <i class="far fa-bookmark"></i> Bookmark
+                            </button>
+                            <button class="btn-secondary" onclick="shareContent()">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chapter List -->
+                <div class="chapter-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-list"></i> Daftar Chapter</h2>
+                        <div class="chapter-controls">
+                            <button class="sort-btn" onclick="toggleChapterSort()">
+                                <i class="fas fa-sort"></i> Urutkan
+                            </button>
+                            <div class="chapter-settings">
+                                <button class="lang-btn" onclick="toggleChapterSettings()" id="chapterSettingsBtn">
+                                    <i class="fas fa-language"></i>
+                                    <span id="chapterLanguageLabel">Indonesia</span>
+                                    <i class="fas fa-chevron-down arrow"></i>
+                                </button>
+                                <div class="chapter-settings-menu" id="chapterSettingsMenu"></div>
+                            </div>
+                            <div class="chapter-search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="chapterSearch" placeholder="Cari chapter...">
+                            </div>
+                        </div>
+                        <div class="chapter-language-notice" id="chapterLanguageNotice"></div>
+                    </div>
+
+                    <div class="chapter-list" id="chapterList">
+                        <!-- Chapters will be loaded here -->
+                    </div>
+
+                    <div class="loading" id="chapterLoading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Memuat chapter...</p>
+                    </div>
+                </div>
+
+                <!-- Related Manga -->
+                <div class="related-section">
+                    <h2><i class="fas fa-layer-group"></i> Manga Serupa</h2>
+                    <div class="manga-grid" id="relatedManga">
+                        <!-- Related manga will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MangaKu. Semua manga diambil dari sumber publik untuk tujuan edukasi.</p>
+            <p>Disclaimer: Website ini hanya mirror dari berbagai sumber manga.</p>
+        </div>
+    </footer>
+
+    <script src="cache-manager.js"></script>
+    <script src="script.js?v=20251101-opt"></script>
+    <script src="manga-detail.js?v=20251101-opt"></script>
+</body>
+</html>

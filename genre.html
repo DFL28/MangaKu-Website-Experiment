@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Genre - MangaKu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="genre-page">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1><a href="index.html">MangaKu</a></h1>
+                </div>
+
+                <!-- Hamburger Menu Toggle -->
+                <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Menu (Slide from Right) -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="toggleSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3>Menu</h3>
+            <button class="close-menu-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <a href="index.html">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="genre.html" class="active">
+                <i class="fas fa-th"></i> Genre
+            </a>
+            <a href="popular.html">
+                <i class="fas fa-fire"></i> Populer
+            </a>
+            <a href="latest.html">
+                <i class="fas fa-clock"></i> Terbaru
+            </a>
+            <a href="bookmark.html">
+                <i class="fas fa-bookmark"></i> Bookmark & History
+            </a>
+            <!-- Login/Logout will be inserted here by JavaScript -->
+            <div id="auth-menu-item"></div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-th"></i> Filter by Genre</h1>
+                <p>Cari manga berdasarkan genre favorit kamu</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section" id="genreFilters">
+                <div class="filter-group">
+                    <label for="sourceFilter">Sumber:</label>
+                    <select id="sourceFilter" onchange="filterManga()">
+                        <option value="all">Semua Sumber</option>
+                        <option value="mangadex">MangaDex</option>
+                        <option value="komiku">Komiku</option>
+                        <option value="maid">Maid</option>
+                        <option value="bacamanga">BacaManga</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Genre:</label>
+                    <div id="genreCheckboxes" class="checkbox-group">
+                        <!-- Checkboxes will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" onchange="filterManga()">
+                        <option value="all">Semua Status</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                        <option value="hiatus">Hiatus</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="typeFilter">Jenis:</label>
+                    <select id="typeFilter" onchange="filterManga()">
+                        <option value="all">Semua Jenis</option>
+                        <option value="manga">Manga</option>
+                        <option value="manhwa">Manhwa</option>
+                        <option value="manhua">Manhua</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortFilter">Urutkan:</label>
+                    <select id="sortFilter" onchange="filterManga()">
+                        <option value="latest">Terbaru</option>
+                        <option value="popular">Populer</option>
+                        <option value="rating">Rating Tertinggi</option>
+                        <option value="title">Judul A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Loading indicator -->
+            <div id="loading" class="updates-loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Memuat manga...</span>
+            </div>
+
+            <!-- Manga Grid (using same class as other pages) -->
+            <div class="manga-grid" id="mangaGrid">
+                <!-- Manga cards will be populated by JavaScript -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="page-btn" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button class="page-btn" id="nextBtn">
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MangaKu. Semua manga diambil dari sumber publik untuk tujuan edukasi.</p>
+            <p>Disclaimer: Website ini hanya mirror dari berbagai sumber manga.</p>
+        </div>
+    </footer>
+
+    <script src="cache-manager.js"></script>
+    <script src="script.js?v=20251102-cache"></script>
+    <script src="genre.js"></script>
+    <script>
+        // Add authentication functionality to the side menu
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthMenuItem();
+        });
+
+        function updateAuthMenuItem() {
+            const authMenuItem = document.getElementById('auth-menu-item');
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                authMenuItem.innerHTML = `
+                    <a href="#" onclick="logout(); toggleSideMenu();">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                `;
+            } else {
+                authMenuItem.innerHTML = `
+                    <a href="login.html" onclick="toggleSideMenu();">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            updateAuthMenuItem();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
