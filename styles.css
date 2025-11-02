@@ -1468,33 +1468,33 @@ button {
 
     /* Mobile: 4 kolom untuk manga grid */
     .manga-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.4rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
     }
 
     .manga-card {
-        border-radius: 6px;
+        border-radius: 8px;
     }
 
     .manga-card-cover {
-        border-radius: 6px;
+        border-radius: 8px;
         padding-top: 150%;
     }
 
     .manga-card-body {
-        padding: 0.35rem 0.15rem 0;
+        padding: 0.4rem 0.2rem 0;
     }
 
     .manga-card-title {
-        font-size: 0.65rem;
-        line-height: 1.25;
-        max-height: 2.5em;
+        font-size: 0.75rem;
+        line-height: 1.3;
+        max-height: 2.6em;
         -webkit-line-clamp: 2;
     }
 
     .manga-card-meta {
-        font-size: 0.6rem;
-        gap: 0.25rem;
+        font-size: 0.65rem;
+        gap: 0.3rem;
     }
 
     .manga-card-source {

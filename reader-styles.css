@@ -246,7 +246,7 @@ body.reader-page {
 .reader-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 2rem 0;
 }
 
 /* ===== Chapter Navigation ===== */
@@ -344,18 +344,18 @@ body.reader-page {
 }
 
 .manga-page {
-    width: 80%;
+    width: 100%;
     max-width: 100%;
     height: auto;
-    margin: 0 auto;
+    margin: 0;
     display: block;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    border-radius: 0;
+    box-shadow: none;
     transition: var(--transition);
 }
 
 .image-container.horizontal .manga-page {
-    min-width: 80%;
+    min-width: 100%;
     scroll-snap-align: center;
 }
 
