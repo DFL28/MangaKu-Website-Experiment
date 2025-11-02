@@ -12,6 +12,41 @@
     <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
+    <!-- Header for auth pages -->
+    <header class="header" style="position: fixed; top: 0; width: 100%; z-index: 1000;">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1><a href="index.html">MangaKu</a></h1>
+                </div>
+                
+                <!-- Search Box - Modified for mobile compatibility -->
+                <div class="search-box-center">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Cari manga..." onkeyup="handleSearch(event)">
+                    <!-- Mobile search button -->
+                    <button class="mobile-search-btn" id="mobileSearchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <button class="hamburger-menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Search Results Dropdown -->
+        <div class="search-results" id="searchResults" hidden>
+            <div class="container">
+                <div class="search-results-content" id="searchResultsContent">
+                    <p class="search-empty">Mulai ketik untuk mencari manga.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
@@ -19,7 +54,12 @@
                 <h1>Daftar MangaKu</h1>
                 <p>Buat akun untuk menyimpan bookmark dan riwayat baca</p>
             </div>
-            
+
+            <!-- Back button -->
+            <button type="button" class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+
             <form id="register-form" class="auth-form">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -53,5 +93,39 @@
     </div>
 
     <script src="register.js"></script>
+    <script>
+        // Mobile search button functionality for auth pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (mobileSearchBtn) {
+                mobileSearchBtn.addEventListener('click', function() {
+                    if (searchResults && searchResults.hasAttribute('hidden')) {
+                        searchResults.removeAttribute('hidden');
+                        if (searchInput) {
+                            searchInput.focus();
+                        }
+                    } else {
+                        if (searchResults) {
+                            searchResults.setAttribute('hidden', '');
+                        }
+                    }
+                });
+            }
+            
+            // Close search when clicking outside
+            if (searchResults) {
+                document.addEventListener('click', function(event) {
+                    if (!searchResults.contains(event.target) && 
+                        mobileSearchBtn && !mobileSearchBtn.contains(event.target) &&
+                        searchInput && !searchInput.contains(event.target)) {
+                        searchResults.setAttribute('hidden', '');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
