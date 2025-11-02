@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MangaKu - Website Baca Manga Indonesia
 
 Website modern untuk membaca manga subtitle Indonesia dengan fitur mirror dari berbagai sumber populer seperti MangaDex, Komiku, WestManga, dan BacaManga.
@@ -266,3 +267,6 @@ Jika ada pertanyaan atau issues, silakan buat issue di repository ini.
 ---
 
 **Selamat Membaca Manga! 📚✨**
+=======
+# MangaKu-Website-Experiment
+>>>>>>> 2d8d7ad207da81a1d694922fd1e37a3d8f6fe0b3
