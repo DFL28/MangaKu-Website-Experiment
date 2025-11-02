@@ -1186,4 +1186,39 @@ function performSearch() {
     searchManga(term);
 }
 
-document.addEventListener('DOMContentLoaded', initializeHome);
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize page-specific functionality
+    if (document.querySelector('.home-toolbar')) {
+        initializeHome();
+    }
+
+    // Mobile search button functionality - works on all pages
+    const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const searchBoxCenter = document.querySelector('.search-box-center');
+
+    if (mobileSearchBtn && searchBoxCenter) {
+        mobileSearchBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            searchBoxCenter.classList.toggle('active');
+            if (searchBoxCenter.classList.contains('active') && searchInput) {
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        });
+    }
+    
+    // Close search when clicking outside
+    document.addEventListener('click', function(event) {
+        const isMobileSearchBtn = mobileSearchBtn && mobileSearchBtn.contains(event.target);
+        const isSearchBox = searchBoxCenter && searchBoxCenter.contains(event.target);
+
+        if (!isMobileSearchBtn && !isSearchBox && searchBoxCenter) {
+            searchBoxCenter.classList.remove('active');
+        }
+
+        if (searchResults && !searchResults.contains(event.target) && !isSearchBox) {
+            searchResults.setAttribute('hidden', '');
+        }
+    });
+});
