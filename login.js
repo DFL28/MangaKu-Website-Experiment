@@ -1,7 +1,8 @@
 // Generate a simple CSRF-like token (in a real app, this would come from the server)
 async function generateCSRFToken() {
     try {
-        const response = await fetch('/api/csrf-token');
+        const API_BASE = window.location.origin;
+        const response = await fetch(`${API_BASE}/api/csrf-token`);
         if (response.ok) {
             const data = await response.json();
             return {
@@ -39,7 +40,10 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     button.disabled = true;
 
     try {
-        const response = await fetch('/login', {
+        // Get API base URL (works for both local and Vercel)
+        const API_BASE = window.location.origin;
+
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,8 +77,17 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         console.error('Login error:', error);
         button.innerHTML = originalText;
         button.disabled = false;
+        button.style.backgroundColor = ''; // Reset background color
         
         // Show error message
         alert('Login gagal: ' + error.message);
+    }
+});
+
+// Add keyboard support for back button
+document.addEventListener('keydown', function(event) {
+    // ESC key to go back
+    if (event.key === 'Escape') {
+        window.history.back();
     }
 });
