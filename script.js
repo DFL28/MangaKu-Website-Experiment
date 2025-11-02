@@ -1,6 +1,6 @@
 // ===== Global Variables =====
 const API_BASE = window.location.origin;
-const ACTIVE_SOURCES = ['mangadex', 'komiku', 'maid', 'bacamanga'];
+const ACTIVE_SOURCES = ['komiku', 'maid', 'bacamanga', 'kiryuu']; // MangaDex disabled for manga list, only for chapters
 const THEME_STORAGE_KEY = 'mangaku_theme';
 const UPDATES_REFRESH_INTERVAL = 30000;
 const DEFAULT_LANGUAGE = 'id';
@@ -350,7 +350,7 @@ if (searchInput) {
 
 async function searchManga(term) {
     try {
-        const sources = ['mangadex', 'komiku', 'maid', 'bacamanga'];
+        const sources = ['komiku', 'maid', 'bacamanga', 'kiryuu']; // MangaDex only for chapters
 
         // Parallel search: server cache + live scraping
         const searchPromises = [
@@ -602,6 +602,16 @@ function injectThemeToggle() {
         button.innerHTML = '<i class="fas fa-moon"></i>';
         actions.insertBefore(button, actions.firstChild);
     }
+
+    const mobileSearch = navWrapper.querySelector('#mobileSearchBtn');
+    if (mobileSearch && mobileSearch.parentElement !== actions) {
+        const themeToggle = actions.querySelector('#themeToggle');
+        if (themeToggle) {
+            actions.insertBefore(mobileSearch, themeToggle.nextSibling);
+        } else {
+            actions.insertBefore(mobileSearch, actions.firstChild);
+        }
+    }
 }
 
 function initThemeToggle() {
@@ -651,27 +661,29 @@ function registerSearchOverlayDismissal() {
     });
 }
 
-function initializeHome() {
+function initializeGlobalUI() {
     injectThemeToggle();
     initThemeToggle();
     hideSearchResults();
     registerSearchOverlayDismissal();
+}
 
+function initializeHome() {
     const isHomePage = Boolean(document.querySelector('.home-toolbar'));
 
-    if (isHomePage) {
-        initUpdatesControls();
-        initTypeTabs();
+    if (!isHomePage) return;
 
-        if (document.getElementById('updatesCarousel')) {
-            loadUpdates();
-            scheduleUpdatesRefresh();
-        }
+    initUpdatesControls();
+    initTypeTabs();
 
-        // Load other comics grid section
-        if (document.getElementById('otherComicsGrid')) {
-            loadOtherComics();
-        }
+    if (document.getElementById('updatesCarousel')) {
+        loadUpdates();
+        scheduleUpdatesRefresh();
+    }
+
+    // Load other comics grid section
+    if (document.getElementById('otherComicsGrid')) {
+        loadOtherComics();
     }
 }
 
@@ -693,7 +705,7 @@ async function loadOtherComics(page = 1) {
         if (otherComicsAllData.length === 0) {
             grid.innerHTML = '<div class="updates-loading" style="grid-column: 1/-1;"><i class="fas fa-spinner fa-spin"></i><span>Memuat data...</span></div>';
 
-            const sources = ['mangadex', 'komiku', 'maid', 'bacamanga'];
+            const sources = ['komiku', 'maid', 'bacamanga', 'kiryuu']; // MangaDex only for chapters
             const allowedGenres = ['isekai', 'fantasy', 'romance', 'ecchi', 'action'];
 
             // 1. Load from cache first (instant)
@@ -836,7 +848,7 @@ async function loadMoreOtherComics() {
     console.log(`[Other Comics] Loading more data from page ${otherComicsNextScrapePage}...`);
 
     try {
-        const sources = ['mangadex', 'komiku', 'maid', 'bacamanga'];
+        const sources = ['komiku', 'maid', 'bacamanga', 'kiryuu']; // MangaDex only for chapters
         const allowedGenres = ['isekai', 'fantasy', 'romance', 'ecchi', 'action'];
 
         // Fetch and cache next 2 pages from each source
@@ -1187,11 +1199,10 @@ function performSearch() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize page-specific functionality
-    if (document.querySelector('.home-toolbar')) {
-        initializeHome();
-    }
+    initializeGlobalUI();
+    initializeHome();
 
+    // Initialize page-specific functionality
     // Mobile search button functionality - works on all pages
     const mobileSearchBtn = document.getElementById('mobileSearchBtn');
     const searchInput = document.getElementById('searchInput');

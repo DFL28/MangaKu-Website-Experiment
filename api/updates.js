@@ -49,8 +49,8 @@ module.exports = async (req, res) => {
         let allUpdates = [];
 
         if (source === 'all') {
-            // Fetch dari semua sources secara parallel
-            const sources = ['mangadex', 'komiku', 'maid', 'bacamanga'];
+            // Fetch dari semua sources secara parallel (mangadex disabled - only for chapters)
+            const sources = ['komiku', 'maid', 'bacamanga', 'kiryuu'];
 
             const cacheKey = `updates:all:${limitNum}`;
             allUpdates = await cache.cached(
